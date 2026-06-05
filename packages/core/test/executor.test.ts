@@ -131,6 +131,23 @@ describe('Executor.execute — error taxonomy (FR-5)', () => {
     expect(invoker.calls).toHaveLength(0)
   })
 
+  it('returns internal when the normalized response violates the action outputSchema (FR-4e / FD-3)', async () => {
+    // outputSchema requires an integer id; the provider hands back a string, so conduit's own
+    // output contract is broken — never the caller's fault, so it must be `internal`, not provider_error.
+    const strictUser = spec({
+      outputSchema: {
+        type: 'object',
+        properties: { login: { type: 'string' }, id: { type: 'integer' } },
+        required: ['login', 'id'],
+      },
+    })
+    const invoker = new FakeInvoker(ok({ login: 'alice', id: 'not-a-number' }))
+    const { executor } = harness({ catalogSpecs: [strictUser], invoker })
+    const result = await executor.execute(principal(), request())
+    expect(result.ok).toBe(false)
+    if (!result.ok) expect(result.error.code).toBe('internal')
+  })
+
   it('propagates provider_error from the invoker (FR-5)', async () => {
     const invoker = new FakeInvoker(err(conduitError('provider_error', 'the provider returned 503')))
     const { executor } = harness({ invoker })

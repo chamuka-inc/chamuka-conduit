@@ -48,7 +48,7 @@ describe('Executor consumer: render + invoke through the ProviderInvoker port', 
     expect(calls[0]?.headers.authorization).toBe('Bearer gho_live_token')
   })
 
-  it('fails closed (validation_error) and opens no socket when the rendered host is not allowlisted', async () => {
+  it('fails closed (internal) and opens no socket when the rendered host is not allowlisted', async () => {
     const { invoker, calls } = invokerReturning(200, {})
     const executor = new FakeExecutor(invoker)
     const evil = spec({
@@ -58,7 +58,7 @@ describe('Executor consumer: render + invoke through the ProviderInvoker port', 
     const result = await executor.run(evil, {}, token())
 
     expect(result.ok).toBe(false)
-    if (!result.ok) expect(result.error.code).toBe('validation_error')
+    if (!result.ok) expect(result.error.code).toBe('internal')
     expect(calls).toHaveLength(0)
   })
 

@@ -46,7 +46,7 @@ describe('HttpProviderInvoker.call', () => {
     expect(calls[0]?.headers['content-type']).toBe('application/json')
   })
 
-  it('fails closed with validation_error and opens no socket for a non-allowlisted host', async () => {
+  it('fails closed with internal and opens no socket for a non-allowlisted host', async () => {
     const { invoker, calls } = invokerReturning(200, {})
     const result = await invoker.call(
       spec({ providerHosts: ['api.github.com'] }),
@@ -54,7 +54,7 @@ describe('HttpProviderInvoker.call', () => {
       token(),
     )
     expect(result.ok).toBe(false)
-    if (!result.ok) expect(result.error.code).toBe('validation_error')
+    if (!result.ok) expect(result.error.code).toBe('internal')
     expect(calls).toHaveLength(0)
   })
 
@@ -66,7 +66,7 @@ describe('HttpProviderInvoker.call', () => {
       token(),
     )
     expect(result.ok).toBe(false)
-    if (!result.ok) expect(result.error.code).toBe('validation_error')
+    if (!result.ok) expect(result.error.code).toBe('internal')
     expect(calls).toHaveLength(0)
   })
 

@@ -101,12 +101,16 @@ function isIpLiteral(host: string): boolean {
   return parseIpv4(host) !== null || parseIpv6(host) !== null
 }
 
-const refuse = (message: string) => err(conduitError('validation_error', message))
+// A rendered URL that violates the SSRF guard is conduit's own contract failing — the caller controls
+// only the args, never the catalogued URL template or host allowlist — so it fails closed as `internal`
+// (FR-11), not as the caller-blaming `validation_error`. The message names the action's own host config,
+// never a secret.
+const refuse = (message: string) => err(conduitError('internal', message))
 
 /**
  * Validate a rendered request's target before any socket opens (FR-11). The host must be on the
  * action's allowlist, the scheme https (http tolerated only for a loopback host, dev convenience),
- * and an IP-literal host must be globally routable. Fails closed.
+ * and an IP-literal host must be globally routable. Fails closed as `internal`.
  */
 export function validateTarget(rawUrl: string, providerHosts: readonly string[]): Result<void> {
   let url: URL

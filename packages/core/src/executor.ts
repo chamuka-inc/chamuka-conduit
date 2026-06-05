@@ -1,7 +1,8 @@
 // The Executor (FR-4) — conduit's heart. For one (principal, ExecuteRequest) it: resolves the
 // ActionSpec from the catalog, validates args against its inputSchema, enforces idempotency, brokers
-// a provider token, renders + invokes the request, normalizes the response into the {data,raw}
-// envelope, and records an audit entry. It consumes its peers only through the frozen ports
+// a provider token, renders + invokes the request, normalizes the response and validates it against
+// the action's outputSchema into the {data,raw} envelope, and records an audit entry. It consumes its
+// peers only through the frozen ports
 // (ActionCatalog, TokenResolver, ProviderInvoker, AuditSink, IdempotencyStore), so it is wired with
 // concrete impls by the app and with fakes by its tests. It returns a Result and never throws across
 // the boundary; every failure is a code in the closed taxonomy (FR-5).
@@ -21,7 +22,7 @@ import type {
 } from '@conduit/contracts'
 import { conduitError, err, ok } from '@conduit/contracts'
 import { renderRequest } from '@conduit/provider-invoker'
-import { ArgsValidator } from './validate-args'
+import { SchemaValidator } from './validate-schema'
 import { normalize } from './normalize'
 
 /** The five seams the Executor drives, injected so impls are leaves the app wires together. */
@@ -45,7 +46,7 @@ export class Executor {
   readonly #audit: AuditSink
   readonly #idempotency: IdempotencyStore
   readonly #now: () => number
-  readonly #argsValidator = new ArgsValidator()
+  readonly #schema = new SchemaValidator()
 
   constructor(ports: ExecutorPorts, options: ExecutorOptions = {}) {
     this.#catalog = ports.catalog
@@ -85,7 +86,7 @@ export class Executor {
       return err(conduitError('validation_error', `unknown action "${request.action}"`))
     }
 
-    const argsCheck = this.#argsValidator.validate(spec, request.args)
+    const argsCheck = this.#schema.validateInput(spec, request.args)
     if (!argsCheck.ok) return argsCheck
 
     const { idempotencyKey } = request
@@ -100,7 +101,12 @@ export class Executor {
     const sent = await this.#invoke(spec, request.args, token.value)
     if (!sent.ok) return sent
 
-    const result: ExecuteResult = { data: normalize(spec.normalize, sent.value), raw: sent.value }
+    // FR-4e / FD-3: `data` is validated against the action's outputSchema before it leaves conduit.
+    const data = normalize(spec.normalize, sent.value)
+    const outputCheck = this.#schema.validateOutput(spec, data)
+    if (!outputCheck.ok) return outputCheck
+
+    const result: ExecuteResult = { data, raw: sent.value }
 
     // Only successful results are cached, so a transient failure can be retried under the same key.
     if (idempotencyKey !== undefined) {

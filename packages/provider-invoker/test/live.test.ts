@@ -74,7 +74,7 @@ live('@conduit/provider-invoker live acceptance against real HTTP', () => {
 
     const result = await invoker.call(s, rendered.value, token())
     expect(result.ok).toBe(false)
-    if (!result.ok) expect(result.error.code).toBe('validation_error')
+    if (!result.ok) expect(result.error.code).toBe('internal')
   })
 
   it('fails closed for a host that is not on the action allowlist', async () => {
@@ -88,6 +88,6 @@ live('@conduit/provider-invoker live acceptance against real HTTP', () => {
 
     const result = await invoker.call(s, rendered.value, token())
     expect(result.ok).toBe(false)
-    if (!result.ok) expect(result.error.code).toBe('validation_error')
+    if (!result.ok) expect(result.error.code).toBe('internal')
   })
 })

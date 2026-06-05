@@ -7,5 +7,5 @@
 
 export { Executor } from './executor'
 export type { ExecutorPorts, ExecutorOptions } from './executor'
-export { ArgsValidator } from './validate-args'
+export { SchemaValidator } from './validate-schema'
 export { normalize } from './normalize'

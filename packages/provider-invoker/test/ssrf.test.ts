@@ -49,7 +49,7 @@ describe('validateTarget (allowlist + scheme + SSRF)', () => {
   it('rejects a host that is not on the action allowlist (fails closed)', () => {
     const r = validateTarget('https://evil.example.com/user', hosts)
     expect(r.ok).toBe(false)
-    if (!r.ok) expect(r.error.code).toBe('validation_error')
+    if (!r.ok) expect(r.error.code).toBe('internal')
   })
 
   it('rejects plaintext http to a public host, allows it only for loopback (dev)', () => {
@@ -69,7 +69,7 @@ describe('validateTarget (allowlist + scheme + SSRF)', () => {
       const url = new URL(bad)
       const r = validateTarget(bad, [url.hostname])
       expect(r.ok, `${bad} must be refused as SSRF`).toBe(false)
-      if (!r.ok) expect(r.error.code).toBe('validation_error')
+      if (!r.ok) expect(r.error.code).toBe('internal')
     }
   })
 
