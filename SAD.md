@@ -1,5 +1,9 @@
 # Software Architecture Document
 
+> **Phase artifact (conduit v1).** Point-in-time bootstrap record; the git tags it names
+> (`spec/*`, `sad/*`, …) lived in the pre-extraction monorepo history and are not present in this
+> standalone repo.
+
 > Scope: conduit v1 core slice (`SPEC.md`, `spec/v0.1.0`). Top-down: 30k → 10k →
 > per-component. credvault is a fixed upstream dependency, consumed over its HTTP API.
 
@@ -51,7 +55,7 @@
   credvault + its Postgres are deployed separately (already containerized).
 - **State at rest:** conduit's Postgres holds tenants, API-key *hashes*, audit records, and
   idempotency entries. credvault's Postgres (separate) holds the encrypted provider tokens.
-- **Packaging:** a single Next.js app (`apps/conduit`) hosts both surfaces (REST + MCP route
+- **Packaging:** a single Next.js app (`apps/web`) hosts both surfaces (REST + MCP route
   handlers) and the operator dashboard; deploy to Vercel or self-host (`next start` /
   `output: 'standalone'`). A `migrate` one-shot applies schema migrations, mirroring credvault.
   Framework-agnostic logic lives in `packages/{contracts,catalog,core,store}` (pnpm workspace).
@@ -363,7 +367,7 @@ contracts version. The catalog is independently versioned data.
 
 ### ADR-005: Surfaces on Next.js (latest, v16) App Router; DB access = Kysely
 - **Context:** need a web layer for REST + MCP (Streamable HTTP) and typed SQL without ORM
-  magic, consistent with the existing `examples/taskflow` (Next.js 16) and the team's stack.
+  magic, consistent with the team's stack (and the credvault `taskflow` Next.js 16 demo precedent).
 - **Decision:** a single **Next.js (latest)** app hosts both surfaces as App Router route
   handlers — REST under `app/api/v1/*/route.ts`, the MCP server under an `app/api/mcp` route
   handler using the MCP Streamable-HTTP adapter — and the operator/dashboard UI. **All business

@@ -1,5 +1,8 @@
 # Specification
 
+> **Phase artifact (conduit v1).** Point-in-time bootstrap record; the `spec/*` (and related) git
+> tags it names lived in the pre-extraction monorepo history and are not present in this standalone repo.
+
 > Scope: the **v1 core slice** of conduit (see North star below for the full platform).
 > Every non-obvious claim, threshold, or constraint traces to a citation or an explicit
 > "chosen because" rationale. Numbers without provenance are guesses, not specifications.

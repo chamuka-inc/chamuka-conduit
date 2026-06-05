@@ -62,7 +62,11 @@ apps/
 
 `main` is the conduit trunk. Cut a `module/<name>` or `fix/<desc>` branch from `main` and
 merge back into it. (Historical note: conduit was extracted from a bundled
-`credvault + conduit` monorepo; this standalone repo starts fresh from that v1-complete tree.)
+`credvault + conduit` monorepo; this standalone repo starts fresh from that v1-complete tree. The
+old `conduit/bootstrap` trunk and the bootstrap-protocol tags — `spec/*`, `sad/*`, `contracts/*`,
+`plan/*`, `module/*` — lived in that prior history and are **not** present here. Where the
+phase-artifact docs (`SPEC.md`/`SAD.md`/`PLAN.md`/`CONTRACTS.md`) name those tags, treat it as
+historical narration.)
 
 ### Verify
 

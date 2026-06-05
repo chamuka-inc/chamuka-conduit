@@ -114,15 +114,17 @@ These rules are not aesthetics. Each one prevents a specific failure mode that c
 
 When a rule feels like it is getting in the way, the rule is usually right and the situation is the thing to reconsider. Departures from the discipline should be documented inline with a reason, not silently elided.
 
-## Project addendum — polyglot monorepo (conduit + credvault)
+## Project addendum — conduit (TypeScript pnpm monorepo)
 
-This repository is a polyglot monorepo. The discipline above is language-agnostic
-in intent; these notes bind it to the two stacks present.
+This repository is conduit: a TypeScript/Node pnpm monorepo (`packages/*` + `apps/web`). The
+discipline above is language-agnostic in intent; these notes bind it to this stack. conduit
+depends on **credvault** — a separate Rust service in its own repo — over its HTTP API; credvault's
+own copy of this discipline governs that codebase, and the Rust-specific notes below are retained as
+the shared house style for when that boundary is touched.
 
-- **credvault** (Rust): the rules above apply as written — `unwrap()`/`expect()` in
-  non-test paths, panics in library code, and `unsafe` without a documented invariant
-  are forbidden.
-- **conduit** (TypeScript/Node): apply the same intent with these equivalents.
+- **conduit** (TypeScript/Node): apply the discipline with the equivalents below.
+- **credvault** (Rust, external): the rules above apply as written there — `unwrap()`/`expect()` in
+  non-test paths, panics in library code, and `unsafe` without a documented invariant are forbidden.
 
 ### TypeScript smell equivalents (rejected in non-test paths)
 

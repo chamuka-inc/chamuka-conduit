@@ -1,5 +1,10 @@
 # Implementation Plan
 
+> **Phase artifact (conduit v1).** Point-in-time bootstrap record. The branch model and the
+> `module/*`, `spec/*`, `sad/*`, `contracts/*`, and `plan/*` git tags it describes lived in the
+> pre-extraction monorepo history; this standalone repo carries the v1-complete tree on a fresh
+> single-commit `main`. v1 is complete — see "Delivery status" below.
+
 > Decomposition of conduit v1 into TypeScript modules (pnpm workspace packages + one Next.js
 > app). Each module depends only on the frozen `@conduit/contracts` and on lower modules through
 > their published contracts. This is what makes "one module at a time, protected by contracts"
@@ -146,19 +151,17 @@ Commit trailers carry `Module:`, `Contract:`, `Phase:`. See `ENGINEERING_DISCIPL
 
 ## Status snapshot
 
-> Maintained by git, not by hand:
->
-> ```sh
-> git tag --list 'module/*'
-> ```
+> In the original monorepo this was maintained by git, not by hand (`git tag --list 'module/*'`).
+> Those per-module tags lived in the pre-extraction history; this standalone repo carries the
+> v1-complete tree on a fresh `main`. See "Delivery status" below for what shipped.
 
 ---
 
 ## Delivery status & post-v1 gaps
 
-**conduit v1 is delivered.** Module 0 (the `ActionCatalog` amendment) and modules 1–7 are merged to
-trunk (`conduit/bootstrap`) and tagged `module/<name>/done`, each through the full
-red→green→refactor→e2e-mock→live cycle. The pre-implementation residual risks above are resolved:
+**conduit v1 is delivered.** Module 0 (the `ActionCatalog` amendment) and modules 1–7 shipped through
+the full red→green→refactor→e2e-mock→live cycle (the per-module `module/<name>/*` tags were created in
+the pre-extraction monorepo history; this repo carries the resulting v1-complete tree on `main`). The pre-implementation residual risks above are resolved:
 the `ActionCatalog` amendment shipped (`contracts/v0.2.0-frozen`), and the MCP Streamable-HTTP adapter
 is pinned (`mcp-handler@1.1.0` + `@modelcontextprotocol/sdk@1.26.0`) and verified against MCP auth
 spec rev `2025-06-18`.

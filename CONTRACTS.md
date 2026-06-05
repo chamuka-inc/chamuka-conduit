@@ -1,6 +1,10 @@
 # Contracts
 
-> Prose companion to the contracts package at `conduit/packages/contracts/`. The package is
+> **Phase artifact (conduit v1).** Point-in-time bootstrap record; the `contracts/*-frozen` and
+> other git tags it names lived in the pre-extraction monorepo history and are not present in this
+> standalone repo. The freeze/amendment *discipline* it describes still applies.
+
+> Prose companion to the contracts package at `packages/contracts/`. The package is
 > the source of truth — Zod schemas + TypeScript types compile; prose does not. This document
 > explains the *why* and the cross-cutting policies the types cannot express.
 
@@ -118,7 +122,7 @@ agree.
 ## Freeze gate
 
 - [x] Confidence self-assessment is "high" with gaps resolved
-- [x] `conduit/packages/contracts/` typechecks cleanly (`tsc --noEmit`, strict)
+- [x] `packages/contracts/` typechecks cleanly (`tsc --noEmit`, strict)
 - [x] Every component in `SAD.md` has its produced and consumed contracts represented
 - [x] The component-to-contract matrix matches the package
 - [x] Tests pass (`vitest run` — 8 passing) and lint is clean
