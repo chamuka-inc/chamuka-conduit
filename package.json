@@ -6,9 +6,10 @@
     "node": ">=20"
   },
   "scripts": {
-    "typecheck": "tsc --noEmit -p packages/contracts/tsconfig.json && tsc --noEmit -p packages/catalog/tsconfig.json && tsc --noEmit -p packages/store/tsconfig.json && tsc --noEmit -p packages/credvault-client/tsconfig.json && tsc --noEmit -p packages/provider-invoker/tsconfig.json && tsc --noEmit -p packages/identity/tsconfig.json && tsc --noEmit -p packages/core/tsconfig.json && pnpm --filter @conduit/web typecheck",
+    "typecheck": "tsc --noEmit -p packages/test-support/tsconfig.json && tsc --noEmit -p packages/contracts/tsconfig.json && tsc --noEmit -p packages/catalog/tsconfig.json && tsc --noEmit -p packages/store/tsconfig.json && tsc --noEmit -p packages/credvault-client/tsconfig.json && tsc --noEmit -p packages/provider-invoker/tsconfig.json && tsc --noEmit -p packages/identity/tsconfig.json && tsc --noEmit -p packages/core/tsconfig.json && pnpm --filter @conduit/web typecheck",
     "lint": "eslint .",
     "test": "vitest run",
+    "test:live": "./scripts/live-test.sh",
     "verify": "pnpm typecheck && pnpm lint && pnpm test"
   },
   "devDependencies": {

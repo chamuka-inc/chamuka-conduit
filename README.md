@@ -57,12 +57,23 @@ pnpm install
 pnpm verify          # typecheck + lint + Vitest (offline; live suites are gated off)
 
 cd apps/web
-pnpm dev             # Next.js dev server on :3000
+cp .env.example .env.local   # then fill in CONDUIT_CREDVAULT_TENANT_KEY
+pnpm dev                     # Next.js dev server on :3000
 ```
 
-Live test suites are gated behind env vars (`CONDUIT_CREDVAULT_URL`,
-`CONDUIT_TEST_DATABASE_URL`) so the default `pnpm verify` runs fully offline — see
-[`CLAUDE.md`](CLAUDE.md) for the per-module gates and the `apps/web` runtime env.
+### Live tests
+
+The `*/test/live.test.ts` suites exercise the real flow against a running credvault + Postgres, and
+are gated so `pnpm verify` stays offline. With a sibling `../credvault` checkout whose stack is up
+(`docker compose up -d`):
+
+```sh
+pnpm test:live       # runs the full suite incl. live, auto-discovering credvault's tenant key
+```
+
+The gate resolves three env vars (`CONDUIT_CREDVAULT_URL`, `CONDUIT_TEST_DATABASE_URL`, and either
+`CONDUIT_CREDVAULT_TENANT_KEY` or `CONDUIT_TENANT_KEY_FILE`), all overridable — see
+[`CLAUDE.md`](CLAUDE.md) and `scripts/live-test.sh`.
 
 ## Documentation
 

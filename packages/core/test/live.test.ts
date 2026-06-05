@@ -1,12 +1,11 @@
 import { describe, it, expect } from 'vitest'
-import { readFileSync, existsSync } from 'node:fs'
-import { resolve } from 'node:path'
 import { ActionName, EndUserId, IdempotencyKey, TenantId } from '@conduit/contracts'
 import type { ExecuteRequest, TenantPrincipal } from '@conduit/contracts'
 import { loadSeedCatalog } from '@conduit/catalog'
 import { CredvaultClient } from '@conduit/credvault-client'
 import { HttpProviderInvoker } from '@conduit/provider-invoker'
 import { InMemoryAuditSink, InMemoryIdempotencyStore } from '@conduit/store'
+import { resolveLiveEnv } from '@conduit/test-support'
 import { Executor } from '../src/index'
 
 // Live acceptance (PLAN module 6). The whole execution pipeline, end-to-end against real peers: the
@@ -14,20 +13,15 @@ import { Executor } from '../src/index'
 // HttpProviderInvoker calls api.github.com — wired through the real seed catalog and store. This is
 // the one path no fake can cover: a real token brokered and a real provider response normalized into
 // the {data,raw} envelope. Gated on env so the offline verify stays green; run it with
-//   CONDUIT_CREDVAULT_URL=http://localhost:8000 pnpm test
-// (the credvault tenant key is read from ../secrets/tenant_key.txt, or CONDUIT_TENANT_KEY_FILE). A
-// live GitHub connection exists for credvault tenant verify-acme, end-user alice.
-const baseUrl = process.env.CONDUIT_CREDVAULT_URL ?? ''
-const keyFile =
-  process.env.CONDUIT_TENANT_KEY_FILE ?? resolve(process.cwd(), '..', 'secrets', 'tenant_key.txt')
-const canRun = baseUrl !== '' && existsSync(keyFile)
-const live = canRun ? describe : describe.skip
+//   CONDUIT_CREDVAULT_URL=http://localhost:8000 CONDUIT_TENANT_KEY_FILE=/path/to/tenant_key.txt pnpm test
+// (or pass the key value via CONDUIT_CREDVAULT_TENANT_KEY). A live GitHub connection exists for
+// credvault tenant verify-acme, end-user alice.
+const { baseUrl, tenantKey, hasCredvault } = resolveLiveEnv()
+const live = hasCredvault ? describe : describe.skip
 
 const CREDVAULT_TENANT_REF = 'verify-acme'
 
 live('@conduit/core live acceptance — full pipeline against real credvault + GitHub', () => {
-  const tenantKey = canRun ? readFileSync(keyFile, 'utf8').trim() : ''
-
   const principal: TenantPrincipal = {
     tenantId: TenantId.parse('conduit-verify'),
     credvaultTenantRef: CREDVAULT_TENANT_REF,

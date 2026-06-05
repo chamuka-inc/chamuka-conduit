@@ -27,6 +27,7 @@
     "zod": "^4.4"
   },
   "devDependencies": {
+    "@conduit/test-support": "workspace:*",
     "@types/node": "^22",
     "@types/react": "^19",
     "@types/react-dom": "^19",

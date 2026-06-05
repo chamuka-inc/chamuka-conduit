@@ -9,6 +9,7 @@ import {
   StoreError,
 } from '../src/index'
 import type { DbHandle } from '../src/index'
+import { resolveLiveEnv } from '@conduit/test-support'
 import {
   tenantId,
   idempotencyKey,
@@ -23,14 +24,14 @@ import {
 //   CONDUIT_TEST_DATABASE_URL=postgres://vault:vault@localhost:5432/vault pnpm test
 // otherwise it skips so the DB-less verify stays green. conduit owns the `conduit` schema, fully
 // isolated from credvault's tables in the same database.
-const url = process.env.CONDUIT_TEST_DATABASE_URL ?? ''
-const live = url === '' ? describe.skip : describe
+const { databaseUrl } = resolveLiveEnv()
+const live = databaseUrl === '' ? describe.skip : describe
 
 live('@conduit/store live acceptance against real Postgres', () => {
   let handle: DbHandle
 
   beforeAll(async () => {
-    handle = createDb(url)
+    handle = createDb(databaseUrl)
     await migrateToLatest(handle.db)
     // Repeatable runs: start from an empty schema each time.
     await sql`truncate table idempotency, audit, tenants`.execute(handle.db)

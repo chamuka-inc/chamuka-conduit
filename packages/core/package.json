@@ -19,6 +19,7 @@
   "devDependencies": {
     "@conduit/catalog": "workspace:*",
     "@conduit/credvault-client": "workspace:*",
-    "@conduit/store": "workspace:*"
+    "@conduit/store": "workspace:*",
+    "@conduit/test-support": "workspace:*"
   }
 }

@@ -13,5 +13,8 @@
   },
   "dependencies": {
     "@conduit/contracts": "workspace:*"
+  },
+  "devDependencies": {
+    "@conduit/test-support": "workspace:*"
   }
 }

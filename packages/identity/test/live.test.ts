@@ -3,19 +3,20 @@ import { createDb, migrateToLatest, PostgresTenantStore } from '@conduit/store'
 import type { DbHandle } from '@conduit/store'
 import { TenantId } from '@conduit/contracts'
 import { IdentityService, generateApiKey, API_KEY_PREFIX } from '../src/index'
+import { resolveLiveEnv } from '@conduit/test-support'
 
 // Live acceptance (PLAN module 5, NFR-SEC-1) against real Postgres — Identity over the durable
 // PostgresTenantStore. Gated on CONDUIT_TEST_DATABASE_URL:
 //   CONDUIT_TEST_DATABASE_URL=postgres://vault:vault@localhost:5432/vault pnpm test
 // otherwise it skips so the DB-less verify stays green. conduit owns the `conduit` schema.
-const url = process.env.CONDUIT_TEST_DATABASE_URL ?? ''
-const live = url === '' ? describe.skip : describe
+const { databaseUrl } = resolveLiveEnv()
+const live = databaseUrl === '' ? describe.skip : describe
 
 live('@conduit/identity live acceptance against real Postgres', () => {
   let handle: DbHandle
 
   beforeAll(async () => {
-    handle = createDb(url)
+    handle = createDb(databaseUrl)
     await migrateToLatest(handle.db)
     // Repeatable runs: start from an empty tenants table each time.
     await handle.db.deleteFrom('tenants').execute()

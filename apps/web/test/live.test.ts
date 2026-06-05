@@ -1,7 +1,6 @@
 import { describe, it, expect, beforeAll } from 'vitest'
-import { readFileSync, existsSync } from 'node:fs'
-import { resolve } from 'node:path'
 import { TenantId } from '@conduit/contracts'
+import { resolveLiveEnv } from '@conduit/test-support'
 // Static imports are safe: these modules read env lazily (only when getServices()/runMigrations is
 // first called, in beforeAll), which is after the env block below has run during module evaluation.
 import {
@@ -18,21 +17,19 @@ import { s256Challenge } from '../lib/server/oauth/pkce'
 // Live acceptance for module 7 (PLAN §7), end-to-end against the running stack: the real container
 // wires the Executor to credvault (:8000) + Postgres + api.github.com, and conduit's own OAuth 2.1
 // AS mints the MCP token. Gated on env so the offline verify stays green; run with
-//   CONDUIT_CREDVAULT_URL=http://localhost:8000 pnpm test
-// (credvault tenant key read from ../secrets/tenant_key.txt; conduit Postgres = the shared vault DB).
-// The route files are one-line adapters over these handlers, so driving the handlers with the live
-// container is the live acceptance (REST GET /tools + POST /execute; the MCP OAuth dance + tools/call).
-const baseUrl = process.env.CONDUIT_CREDVAULT_URL ?? ''
-const keyFile =
-  process.env.CONDUIT_TENANT_KEY_FILE ?? resolve(process.cwd(), '..', 'secrets', 'tenant_key.txt')
-const databaseUrl = process.env.CONDUIT_TEST_DATABASE_URL ?? 'postgres://vault:vault@localhost:5432/vault'
-const canRun = baseUrl !== '' && existsSync(keyFile)
+//   CONDUIT_CREDVAULT_URL=http://localhost:8000 CONDUIT_TENANT_KEY_FILE=/path/to/tenant_key.txt \
+//   CONDUIT_TEST_DATABASE_URL=postgres://vault:vault@localhost:5432/vault pnpm test
+// (or pass the key value via CONDUIT_CREDVAULT_TENANT_KEY). The route files are one-line adapters
+// over these handlers, so driving the handlers with the live container is the live acceptance
+// (REST GET /tools + POST /execute; the MCP OAuth dance + tools/call).
+const { baseUrl, tenantKey, databaseUrl, hasCredvault } = resolveLiveEnv()
+const canRun = hasCredvault
 
 if (canRun) {
   process.env.CONDUIT_CREDVAULT_URL = baseUrl
-  process.env.CONDUIT_CREDVAULT_TENANT_KEY = readFileSync(keyFile, 'utf8').trim()
+  process.env.CONDUIT_CREDVAULT_TENANT_KEY = tenantKey
   process.env.CONDUIT_CREDVAULT_TENANT_REF = 'verify-acme'
-  process.env.CONDUIT_DATABASE_URL = databaseUrl
+  process.env.CONDUIT_DATABASE_URL = databaseUrl || 'postgres://vault:vault@localhost:5432/vault'
   process.env.CONDUIT_PUBLIC_URL = 'http://localhost:3000'
   process.env.CONDUIT_OAUTH_SIGNING_SECRET = 'conduit-live-test-oauth-signing-secret-0123456789'
 }

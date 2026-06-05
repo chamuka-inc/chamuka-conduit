@@ -1,22 +1,18 @@
 import { describe, it, expect } from 'vitest'
-import { readFileSync, existsSync } from 'node:fs'
-import { resolve } from 'node:path'
 import type { AccessToken } from '@conduit/contracts'
+import { resolveLiveEnv } from '@conduit/test-support'
 import { HttpProviderInvoker, renderRequest } from '../src/index'
 import { spec, token } from './fixtures'
 
 // Live acceptance (PLAN module 4, FR-11) against real HTTP. This is the one path the unit fakes
 // can't cover: render an ActionSpec + args + a real token into a request, SSRF-validate it, and
 // call api.github.com. Gated on env — run it with
-//   CONDUIT_CREDVAULT_URL=http://localhost:8000 pnpm test
-// (the credvault tenant key is read from ../secrets/tenant_key.txt, or CONDUIT_TENANT_KEY_FILE).
-// Without the env it skips, so the offline verify stays green. A live GitHub connection exists for
-// credvault tenant verify-acme, end-user alice — used here only to obtain a real provider token.
-const baseUrl = process.env.CONDUIT_CREDVAULT_URL ?? ''
-const keyFile =
-  process.env.CONDUIT_TENANT_KEY_FILE ?? resolve(process.cwd(), '..', 'secrets', 'tenant_key.txt')
-const canRun = baseUrl !== '' && existsSync(keyFile)
-const live = canRun ? describe : describe.skip
+//   CONDUIT_CREDVAULT_URL=http://localhost:8000 CONDUIT_TENANT_KEY_FILE=/path/to/tenant_key.txt pnpm test
+// (or pass the key value via CONDUIT_CREDVAULT_TENANT_KEY). Without the env it skips, so the offline
+// verify stays green. A live GitHub connection exists for credvault tenant verify-acme, end-user
+// alice — used here only to obtain a real provider token.
+const { baseUrl, tenantKey, hasCredvault } = resolveLiveEnv()
+const live = hasCredvault ? describe : describe.skip
 
 /** Obtain a real provider token from the running credvault (alice/github), via its HTTP API. */
 async function resolveGithubToken(tenantKey: string): Promise<AccessToken> {
@@ -41,7 +37,6 @@ async function resolveGithubToken(tenantKey: string): Promise<AccessToken> {
 }
 
 live('@conduit/provider-invoker live acceptance against real HTTP', () => {
-  const tenantKey = canRun ? readFileSync(keyFile, 'utf8').trim() : ''
   const invoker = new HttpProviderInvoker()
 
   it('renders github.get_authenticated_user, SSRF-validates it, and calls api.github.com (FR-11)', async () => {

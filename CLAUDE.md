@@ -75,19 +75,30 @@ is a Next.js app — its typecheck runs `next typegen && tsc` (wired into the ro
 and `cd apps/web && pnpm build` produces the production build. `@conduit/contracts` is frozen —
 changes need an amendment branch.
 
-### Live-test env gates (per module)
+### Live tests
 
-Live suites are gated so the offline `pnpm verify` stays green. They require a running
-credvault + Postgres.
+The six `test/live.test.ts` suites run against a real credvault + Postgres; they're gated so the
+offline `pnpm verify` skips them and stays green. The simplest way to run them:
 
-- `@conduit/store`: `CONDUIT_TEST_DATABASE_URL=postgres://vault:vault@localhost:5432/vault pnpm test`
-  (conduit owns a dedicated `conduit` Postgres schema, isolated from credvault's `public`).
-- `@conduit/credvault-client`: `CONDUIT_CREDVAULT_URL=http://localhost:8000 pnpm test`
-  (reads the credvault tenant key; live GitHub connection is tenant `verify-acme`, end-user `alice`).
-- `@conduit/provider-invoker`: same gate — brokers a real `alice/github` token from credvault,
-  then calls `api.github.com`.
-- `@conduit/web`: `CONDUIT_CREDVAULT_URL=http://localhost:8000 CONDUIT_TEST_DATABASE_URL=postgres://vault:vault@localhost:5432/vault pnpm test`
-  — drives the real container through the REST handlers and the full MCP OAuth dance.
+```sh
+pnpm test:live   # = scripts/live-test.sh — supplies the env gates with local-dev defaults
+```
+
+With a sibling `../credvault` checkout whose stack is up (`docker compose up -d`), that needs no
+configuration. The gate is resolved once in `@conduit/test-support` (`resolveLiveEnv()`); the three
+env knobs (all overridable):
+
+- `CONDUIT_CREDVAULT_URL` — a running credvault (default `http://localhost:8000`).
+- `CONDUIT_CREDVAULT_TENANT_KEY` — the tenant key value, **or** `CONDUIT_TENANT_KEY_FILE` — a path to
+  a file holding it (the script defaults this to `../credvault/secrets/tenant_key.txt`). conduit and
+  credvault are now separate repos, so this is explicit — never assumed from a sibling layout in test
+  code. The live GitHub connection is credvault tenant `verify-acme`, end-user `alice`.
+- `CONDUIT_TEST_DATABASE_URL` — conduit Postgres (default `postgres://vault:vault@localhost:5432/vault`).
+  conduit owns a dedicated `conduit` schema, isolated from credvault's `public`.
+
+What they cover: `store`/`identity` → real Postgres; `credvault-client` → brokers a real token;
+`provider-invoker` → renders + SSRF-validates + calls `api.github.com`; `core` → the full Executor
+pipeline; `web` → REST `/execute` + the full MCP OAuth dance against the live container.
 
 ### Running `apps/web`
 

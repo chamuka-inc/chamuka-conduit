@@ -14,5 +14,8 @@
   "dependencies": {
     "@conduit/contracts": "workspace:*",
     "@conduit/store": "workspace:*"
+  },
+  "devDependencies": {
+    "@conduit/test-support": "workspace:*"
   }
 }
