@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>conduit · UX mockups</title>
+<link rel="stylesheet" href="conduit-ds.css" />
+<style>
+  .gallery{max-width:880px;margin:0 auto;padding:48px 24px}
+  .cards{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:28px}
+  a.surface{display:block;text-decoration:none;background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:20px;transition:.18s}
+  a.surface:hover{border-color:var(--accent-dim);transform:translateY(-2px)}
+  a.surface h3{margin:0 0 4px;font-size:16px}
+  a.surface .who{font-family:var(--mono);font-size:11px;color:var(--accent-dim);text-transform:uppercase;letter-spacing:.1em}
+  a.surface .row{display:flex;justify-content:space-between;margin-top:12px;font-size:12px;color:var(--muted);font-family:var(--mono)}
+  @media(max-width:640px){.cards{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+  <div class="gallery">
+    <div class="brand"><span class="dot"></span><div><b>conduit</b><br><small>ux mockups</small></div></div>
+    <h1 style="margin-top:24px">Four separate apps, four separate users</h1>
+    <p class="sub">Each surface is its own deployment with its own domain, auth, and trust tier — they share this design system, never a shell or a session. This page is a developer gallery, not a product surface.</p>
+    <div class="cards">
+      <a class="surface" href="portal.html">
+        <div class="who">end-user · lowest trust</div>
+        <h3>Connection portal ◎</h3>
+        <p class="small mut" style="margin:6px 0 0">Connect your own accounts (OAuth + API-key). Hosted or embedded. No conduit account.</p>
+        <div class="row"><span>connect.conduit.app</span><span>session token</span></div>
+      </a>
+      <a class="surface" href="dashboard.html">
+        <div class="who">tenant owner</div>
+        <h3>Developer dashboard ▦</h3>
+        <p class="small mut" style="margin:6px 0 0">Keys, tools, connections matrix, MCP setup, playground, logs — scoped to one tenant.</p>
+        <div class="row"><span>app.conduit.app</span><span>dashboard login</span></div>
+      </a>
+      <a class="surface" href="console.html">
+        <div class="who">platform admin · highest trust</div>
+        <h3>Operator console ⌬</h3>
+        <p class="small mut" style="margin:6px 0 0">Register provider apps, publish catalog, tenants, cross-tenant observability.</p>
+        <div class="row"><span>admin.conduit.app</span><span>SSO + role</span></div>
+      </a>
+      <a class="surface" href="mcp-consent.html">
+        <div class="who">mcp client's human</div>
+        <h3>MCP consent ⚷</h3>
+        <p class="small mut" style="margin:6px 0 0">A single OAuth interstitial: approve a client, bind an end-user, grant scopes.</p>
+        <div class="row"><span>vault.conduit.app/oauth/authorize</span><span>OAuth 2.1</span></div>
+      </a>
+    </div>
+  </div>
+</body>
+</html>

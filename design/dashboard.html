@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>conduit · Acme dashboard</title>
+<link rel="stylesheet" href="conduit-ds.css" />
+</head>
+<body>
+<div class="app">
+  <aside class="side">
+    <div class="brand"><span class="dot"></span><div><b>conduit</b><br><small>dashboard</small></div></div>
+    <div class="navlabel">Acme</div>
+    <div class="nav active" data-pane="ov"><span class="ic">▦</span> Overview</div>
+    <div class="nav" data-pane="keys"><span class="ic">⌥</span> API keys</div>
+    <div class="nav" data-pane="tl"><span class="ic">⚒</span> Tools</div>
+    <div class="nav" data-pane="cn"><span class="ic">◎</span> Connections <span class="badge">41</span></div>
+    <div class="nav" data-pane="mc"><span class="ic">⚷</span> MCP</div>
+    <div class="nav" data-pane="pg"><span class="ic">▷</span> Playground</div>
+    <div class="nav" data-pane="lg"><span class="ic">≣</span> Logs</div>
+    <div class="nav" data-pane="st"><span class="ic">⚙</span> Settings</div>
+    <div class="me"><span class="av">al</span><div>alice@acme.com<br><span class="note">Acme · owner</span></div></div>
+  </aside>
+  <main>
+    <div class="ctxbar"><span class="crumb">conduit ▸ <b>Acme</b></span><span class="tag">tenant owner</span></div>
+    <div class="wrap">
+
+      <div class="pane show" id="ov">
+        <h1>Overview</h1><p class="sub">Last 24 hours across your tenant.</p>
+        <div class="grid g3 stagger">
+          <div class="card stat"><div class="k">Executions · 24h</div><div class="v">1,284</div>
+            <div class="spark"><i style="height:40%"></i><i style="height:55%"></i><i style="height:48%"></i><i style="height:80%"></i><i style="height:62%"></i><i style="height:95%"></i><i style="height:70%"></i><i style="height:84%"></i></div></div>
+          <div class="card stat"><div class="k">Success rate</div><div class="v">97.4<small>%</small></div><div class="small mut" style="margin-top:12px">ok 1,251 · not_connected 22 · provider_error 7 · timeout 4</div></div>
+          <div class="card stat"><div class="k">Avg latency</div><div class="v">412<small>ms</small></div><div class="small mut" style="margin-top:12px">p95 980ms · p99 1.7s</div></div>
+        </div>
+        <div class="card" style="margin-top:14px;border-color:rgba(245,181,69,.3)">
+          <div class="flex between"><div class="flex"><span class="pill warn">attention</span><span>22 executions failed <span class="mono">not_connected</span> in the last 24h.</span></div><button class="btn sm" data-jump="cn">View affected users →</button></div>
+        </div>
+        <p class="eyebrow" style="margin-top:26px">Recent executions</p>
+        <div class="card" style="padding:6px 8px"><table>
+          <tr><th>Started</th><th>End user</th><th>Action</th><th>Outcome</th><th>Latency</th></tr>
+          <tr><td class="mono mut">15:37:10</td><td>alice@acme.com</td><td class="mono">github.get_authenticated_user</td><td><span class="pill ok">ok</span></td><td class="mono">605ms</td></tr>
+          <tr><td class="mono mut">15:36:02</td><td>bob@acme.com</td><td class="mono">slack.post_message</td><td><span class="pill ok">ok</span></td><td class="mono">""</td></tr>
+          <tr><td class="mono mut">15:35:55</td><td>cara@acme.com</td><td class="mono">slack.post_message</td><td><span class="pill warn">not_connected</span></td><td class="mono">5ms</td></tr>
+          <tr><td class="mono mut">15:34:41</td><td>alice@acme.com</td><td class="mono">github.create_issue</td><td><span class="pill ok">ok</span></td><td class="mono">512ms</td></tr>
+        </table></div>
+      </div>
+
+      <div class="pane" id="keys">
+        <div class="flex between"><h1>API keys</h1><button class="btn primary sm" onclick="toast('New key created — copy it now, it won’t be shown again')">+ Create key</button></div>
+        <p class="sub">Server-side keys your backend uses to call conduit. Only the hash is stored.</p>
+        <div class="card" style="padding:6px 8px"><table>
+          <tr><th>Name</th><th>Key</th><th>Created</th><th>Last used</th><th></th></tr>
+          <tr><td>prod-backend</td><td class="mono">cdt_••••••••••3-_hI</td><td class="mut">Apr 2</td><td class="mut">2m ago</td><td><button class="btn ghost sm">rotate</button> <button class="btn ghost sm" style="color:var(--err)">revoke</button></td></tr>
+          <tr><td>staging</td><td class="mono">cdt_••••••••••a91f</td><td class="mut">Mar 18</td><td class="mut">1d ago</td><td><button class="btn ghost sm">rotate</button> <button class="btn ghost sm" style="color:var(--err)">revoke</button></td></tr>
+        </table></div>
+        <p class="note" style="margin-top:12px">Plaintext keys are shown exactly once at creation (NFR-SEC-1). Never visible again.</p>
+      </div>
+
+      <div class="pane" id="tl">
+        <h1>Tools</h1><p class="sub">Enable the catalog actions your agents may call. Toggling one scopes what end-users are asked to connect.</p>
+        <div class="card"><div class="flex between"><div class="flex"><div class="logo" style="width:30px;height:30px;font-size:12px;color:var(--gh)">GH</div><b>GitHub</b><span class="pill ok">enabled</span></div><div class="toggle on"></div></div>
+          <div class="divider"></div>
+          <div class="flex between small"><span class="mono">github.get_authenticated_user</span><span class="scope">read:user</span></div>
+          <div class="flex between small" style="margin-top:8px"><span class="mono">github.create_issue</span><span class="scope">repo</span></div>
+          <div class="flex between small" style="margin-top:8px"><span class="mono">github.list_repositories</span><span class="scope">repo</span></div></div>
+        <div class="card"><div class="flex between"><div class="flex"><div class="logo" style="width:30px;height:30px;font-size:12px;color:var(--slack)">SL</div><b>Slack</b><span class="pill ok">enabled</span></div><div class="toggle on"></div></div>
+          <div class="divider"></div>
+          <div class="flex between small"><span class="mono">slack.post_message</span><span class="flex"><span class="scope">chat:write</span><span class="pill warn">41 users not connected</span></span></div></div>
+        <div class="card"><div class="flex between"><div class="flex"><div class="logo" style="width:30px;height:30px;font-size:12px;color:var(--linear)">LN</div><b>Linear</b><span class="pill none">available</span></div><button class="btn sm" onclick="toast('Linear enabled for Acme')">Enable</button></div></div>
+      </div>
+
+      <div class="pane" id="cn">
+        <div class="flex between"><h1>Connections</h1><button class="btn primary sm" onclick="toast('Connect link copied — open hosted, or feed @conduit/connect')">+ Mint connect link ⧉</button></div>
+        <p class="sub">Your end-users × providers. A connect link is a short-lived session token scoped to one user.</p>
+        <div class="card" style="padding:6px 8px"><table>
+          <tr><th>End user</th><th>GitHub</th><th>Slack</th><th>Linear</th><th></th></tr>
+          <tr><td>alice@acme.com</td><td><span class="pill ok">healthy</span></td><td><span class="pill warn">reauth</span></td><td><span class="pill none">—</span></td><td><button class="btn ghost sm" onclick="toast('link for alice ⧉')">link ⧉</button></td></tr>
+          <tr><td>bob@acme.com</td><td><span class="pill ok">healthy</span></td><td><span class="pill ok">healthy</span></td><td><span class="pill ok">healthy</span></td><td><button class="btn ghost sm">link ⧉</button></td></tr>
+          <tr><td>cara@acme.com</td><td><span class="pill ok">healthy</span></td><td><span class="pill none">—</span></td><td><span class="pill none">—</span></td><td><button class="btn ghost sm">link ⧉</button></td></tr>
+        </table></div>
+      </div>
+
+      <div class="pane" id="mc">
+        <h1>MCP</h1><p class="sub">Turn an MCP client (Claude, Cursor, …) onto this tenant.</p>
+        <div class="card">
+          <div class="field"><label>Your MCP endpoint</label><div class="codeblk"><span class="k">https://</span>mcp.conduit.app/t/<span class="a">acme</span></div><div class="hint">OAuth 2.1 — discovery automatic, audience-bound, PKCE-protected.</div></div>
+          <div class="field"><label>Add to Claude / Cursor / Windsurf</label><div class="codeblk">{ <span class="k">"mcpServers"</span>: { <span class="k">"conduit"</span>: { <span class="k">"url"</span>: <span class="s">"https://mcp.conduit.app/t/acme"</span> } } }</div></div>
+          <div class="flex" style="gap:8px"><button class="btn primary sm" onclick="toast('Config copied ⧉')">Copy config</button><button class="btn sm" onclick="toast('initialize → tools/list → ok')">Test connection</button></div>
+        </div>
+        <div class="card"><span class="mut small">Registered clients</span><div class="divider"></div>
+          <div class="flex between small"><span>Claude Desktop · <span class="mut">2 days ago</span></span><button class="btn ghost sm">revoke</button></div>
+          <div class="flex between small" style="margin-top:8px"><span>Cursor · <span class="mut">today</span></span><button class="btn ghost sm">revoke</button></div></div>
+      </div>
+
+      <div class="pane" id="pg">
+        <h1>Playground</h1><p class="sub">Run an action against a real end-user's connection and see the envelope + audit row.</p>
+        <div class="card">
+          <div class="flex wrapf" style="gap:10px"><div class="field" style="flex:1;min-width:240px;margin:0"><label>Action</label><input value="github.create_issue" /></div><div class="field" style="flex:1;min-width:200px;margin:0"><label>Acting for</label><input value="alice@acme.com" /></div></div>
+          <div class="field" style="margin-top:14px"><label>args</label><input value='{ "owner":"acme", "repo":"web", "title":"Bug" }' /></div>
+          <button class="btn primary sm" onclick="toast('200 ✓ — issue #42 created')">Run</button>
+          <div class="codeblk" style="margin-top:14px"><span class="s">200 ✓</span>  { <span class="k">data</span>:{ number:42, htmlUrl:<span class="s">"github.com/acme/web/issues/42"</span> }, <span class="k">raw</span>:{…} }   <span class="mut">→ audit #91af</span></div>
+        </div>
+      </div>
+
+      <div class="pane" id="lg">
+        <h1>Logs</h1><p class="sub">Filter by action, outcome, end-user, time. Drill into one execution.</p>
+        <div class="flex wrapf" style="gap:8px;margin-bottom:14px"><span class="scope">outcome: all ▾</span><span class="scope">action: all ▾</span><span class="scope">last 24h ▾</span></div>
+        <div class="card" style="padding:6px 8px"><table>
+          <tr><th>Time</th><th>Action</th><th>End user</th><th>Outcome</th><th>id</th></tr>
+          <tr><td class="mono mut">15:37:10</td><td class="mono">github.get_authenticated_user</td><td>alice</td><td><span class="pill ok">ok</span></td><td class="mono mut">91af</td></tr>
+          <tr><td class="mono mut">15:35:55</td><td class="mono">slack.post_message</td><td>cara</td><td><span class="pill warn">not_connected</span></td><td class="mono mut">90c2</td></tr>
+          <tr><td class="mono mut">15:31:02</td><td class="mono">github.create_issue</td><td>bob</td><td><span class="pill err">provider_error</span></td><td class="mono mut">8f7d</td></tr>
+        </table></div>
+      </div>
+
+      <div class="pane" id="st">
+        <h1>Settings</h1><p class="sub">Team, embedded-connect theme, webhooks, quota.</p>
+        <div class="card"><div class="flex between"><div><b>Embedded connect theme</b><div class="note">brand color used by the @conduit/connect widget</div></div><input type="text" value="#5b8cff" style="width:120px;background:var(--ink-2);border:1px solid var(--line);border-radius:8px;padding:8px;color:var(--text);font-family:var(--mono)"/></div></div>
+        <div class="card"><div class="flex between"><div><b>Webhook · execution events</b><div class="note">https://acme.com/hooks/conduit</div></div><div class="toggle on"></div></div></div>
+        <div class="card"><div class="flex between"><div><b>Monthly quota</b><div class="note">38,200 / 100,000 executions</div></div><span class="pill ok">healthy</span></div></div>
+      </div>
+
+    </div>
+  </main>
+</div>
+<div class="toast" id="toast"><span class="dot"></span><span id="toastmsg"></span></div>
+<script>
+  const navs=document.querySelectorAll('.nav'),panes=document.querySelectorAll('.pane');
+  function go(id){navs.forEach(n=>n.classList.toggle('active',n.dataset.pane===id));panes.forEach(p=>p.classList.toggle('show',p.id===id));window.scrollTo(0,0);}
+  navs.forEach(n=>n.onclick=()=>go(n.dataset.pane));
+  document.querySelectorAll('[data-jump]').forEach(b=>b.onclick=()=>go(b.dataset.jump));
+  document.querySelectorAll('.toggle').forEach(t=>t.onclick=()=>t.classList.toggle('on'));
+  let tt;function toast(m){const t=document.getElementById('toast');document.getElementById('toastmsg').textContent=m;t.classList.add('show');clearTimeout(tt);tt=setTimeout(()=>t.classList.remove('show'),2600);}
+</script>
+</body>
+</html>

@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>conduit · operator console</title>
+<link rel="stylesheet" href="conduit-ds.css" />
+<style>.adminflag{font-family:var(--mono);font-size:8.5px;letter-spacing:.12em;color:var(--warn);border:1px solid rgba(245,181,69,.4);border-radius:4px;padding:1px 5px}</style>
+</head>
+<body>
+<div class="app">
+  <aside class="side">
+    <div class="brand"><span class="dot"></span><div><b>conduit</b><br><small>operator</small></div></div>
+    <div style="padding:0 8px 6px"><span class="adminflag">INTERNAL · ADMIN</span></div>
+    <div class="navlabel">Platform</div>
+    <div class="nav active" data-pane="ig"><span class="ic">⌬</span> Provider integrations</div>
+    <div class="nav" data-pane="ct"><span class="ic">≡</span> Catalog</div>
+    <div class="nav" data-pane="tn"><span class="ic">▥</span> Tenants</div>
+    <div class="nav" data-pane="ob"><span class="ic">◔</span> Observability</div>
+    <div class="nav" data-pane="se"><span class="ic">⚙</span> Platform settings</div>
+    <div class="me"><span class="av">op</span><div>ops@conduit<br><span class="note">platform admin · SSO</span></div></div>
+  </aside>
+  <main>
+    <div class="ctxbar"><span class="crumb">conduit ▸ <b>admin</b></span><span class="tag">platform operator</span></div>
+    <div class="wrap">
+
+      <div class="pane show" id="ig">
+        <h1>Provider integrations</h1>
+        <p class="sub">The one-time, per-service setup: register the app in the provider's console, then store its OAuth credentials in the vault. A provider's catalog actions stay dormant (<span class="mono">not_connected</span>) until this is done.</p>
+        <div class="grid g2 stagger">
+          <div class="card">
+            <div class="flex between" style="margin-bottom:16px"><b>Add provider integration</b><span class="note">→ credvault</span></div>
+            <div class="field"><label>Provider</label><input value="Slack" /></div>
+            <div class="field"><label>Auth type</label><input value="oauth2  ·  scopes: chat:write" readonly /></div>
+            <div class="field"><label>Client ID</label><input value="" placeholder="from api.slack.com/apps" /></div>
+            <div class="field"><label>Client secret</label><input type="password" value="" placeholder="stored in vault only — never rendered back" /></div>
+            <div class="field"><label>Redirect URL — register this in Slack</label><input value="https://vault.conduit.app/oauth/callback" readonly /></div>
+            <div class="flex" style="justify-content:flex-end;gap:8px"><span class="pill none" style="margin-right:auto">not configured</span><button class="btn primary sm" onclick="toast('Verifying Slack credentials with the vault…')">Save & verify</button></div>
+          </div>
+          <div>
+            <div class="card"><p class="eyebrow" style="margin:0 0 14px">Configured providers</p>
+              <div class="flex between" style="padding:6px 0"><div class="flex"><div class="logo" style="width:28px;height:28px;font-size:11px;color:var(--gh)">GH</div>GitHub</div><span class="pill ok">live</span></div>
+              <div class="divider" style="margin:10px 0"></div>
+              <div class="flex between" style="padding:6px 0"><div class="flex"><div class="logo" style="width:28px;height:28px;font-size:11px;color:var(--slack)">SL</div>Slack</div><span class="pill warn">configuring</span></div></div>
+            <div class="card"><p class="eyebrow" style="margin:0 0 12px">Cross-tenant · 24h</p>
+              <div class="flex between small"><span class="mut">Throughput</span><span class="mono">38.2k</span></div>
+              <div class="flex between small" style="margin-top:8px"><span class="mut">SSRF blocks</span><span class="mono" style="color:var(--ok)">0</span></div>
+              <div class="flex between small" style="margin-top:8px"><span class="mut">Error rate</span><span class="mono">2.1%</span></div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="pane" id="ct">
+        <h1>Catalog</h1><p class="sub">The global action catalog. New actions are validated fail-fast (FR-1) before publish.</p>
+        <div class="card"><div class="flex between" style="margin-bottom:14px"><b>Publish · slack.post_message</b><span class="note">preview</span></div>
+          <div class="codeblk small"><span class="s">✓</span> spec parses (ActionSpec)<br><span class="s">✓</span> input/output JSON Schema compiles<br><span class="s">✓</span> every {placeholder} declared in inputSchema<br><span class="s">✓</span> host allowlisted · <span class="mut">slack.com</span><br><span class="a">→ ready to publish</span></div>
+          <div class="flex" style="justify-content:flex-end;margin-top:14px"><button class="btn primary sm" onclick="toast('Published slack.post_message to the global catalog')">Publish</button></div></div>
+        <div class="card" style="padding:6px 8px"><table>
+          <tr><th>Action</th><th>Provider</th><th>Host</th><th>Status</th></tr>
+          <tr><td class="mono">github.get_authenticated_user</td><td>github</td><td class="mut">api.github.com</td><td><span class="pill ok">published</span></td></tr>
+          <tr><td class="mono">github.create_issue</td><td>github</td><td class="mut">api.github.com</td><td><span class="pill ok">published</span></td></tr>
+          <tr><td class="mono">slack.post_message</td><td>slack</td><td class="mut">slack.com</td><td><span class="pill warn">draft</span></td></tr>
+        </table></div>
+      </div>
+
+      <div class="pane" id="tn">
+        <h1>Tenants</h1><p class="sub">All conduit tenants and their credvault mapping.</p>
+        <div class="card" style="padding:6px 8px"><table>
+          <tr><th>Tenant</th><th>credvault ref</th><th>End users</th><th>24h exec</th><th>Status</th></tr>
+          <tr><td>Acme</td><td class="mono">verify-acme</td><td>318</td><td class="mono">38.2k</td><td><span class="pill ok">active</span></td></tr>
+          <tr><td>Globex</td><td class="mono">globex-prod</td><td>54</td><td class="mono">2.1k</td><td><span class="pill ok">active</span></td></tr>
+          <tr><td>Initech</td><td class="mono">initech</td><td>3</td><td class="mono">0</td><td><span class="pill none">suspended</span></td></tr>
+        </table></div>
+      </div>
+
+      <div class="pane" id="ob">
+        <h1>Observability</h1><p class="sub">Cross-tenant signals.</p>
+        <div class="grid g3 stagger">
+          <div class="card stat"><div class="k">Throughput · 24h</div><div class="v">40.3k</div><div class="spark"><i style="height:50%"></i><i style="height:70%"></i><i style="height:55%"></i><i style="height:88%"></i><i style="height:72%"></i><i style="height:99%"></i><i style="height:80%"></i></div></div>
+          <div class="card stat"><div class="k">Error taxonomy</div><div class="v">2.0<small>%</small></div><div class="small mut" style="margin-top:12px">provider_error 1.1% · timeout 0.5% · not_connected 0.4%</div></div>
+          <div class="card stat"><div class="k">SSRF blocks</div><div class="v" style="color:var(--ok)">0</div><div class="small mut" style="margin-top:12px">egress allowlist holding</div></div>
+        </div>
+      </div>
+
+      <div class="pane" id="se">
+        <h1>Platform settings</h1><p class="sub">Global policy. Changes affect every tenant.</p>
+        <div class="card"><div class="flex between"><div><b>Rate-limit policy</b><div class="note">per tenant · sliding window</div></div><input value="600 / min" style="width:120px;background:var(--ink-2);border:1px solid var(--line);border-radius:8px;padding:8px;color:var(--text);font-family:var(--mono)"/></div></div>
+        <div class="card"><div class="flex between"><div><b>OAuth signing key</b><div class="note">MCP access-token signing · rotate quarterly</div></div><button class="btn sm" onclick="toast('Rotation scheduled — old key honored 24h')">Rotate</button></div></div>
+        <div class="card"><div class="flex between"><div><b>Regions</b><div class="note">us-east · eu-west</div></div><span class="pill ok">2 healthy</span></div></div>
+      </div>
+
+    </div>
+  </main>
+</div>
+<div class="toast" id="toast"><span class="dot"></span><span id="toastmsg"></span></div>
+<script>
+  const navs=document.querySelectorAll('.nav'),panes=document.querySelectorAll('.pane');
+  navs.forEach(n=>n.onclick=()=>{navs.forEach(x=>x.classList.toggle('active',x===n));panes.forEach(p=>p.classList.toggle('show',p.id===n.dataset.pane));window.scrollTo(0,0);});
+  let tt;function toast(m){const t=document.getElementById('toast');document.getElementById('toastmsg').textContent=m;t.classList.add('show');clearTimeout(tt);tt=setTimeout(()=>t.classList.remove('show'),2600);}
+</script>
+</body>
+</html>

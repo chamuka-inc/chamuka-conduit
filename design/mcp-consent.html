@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Authorize · conduit</title>
+<link rel="stylesheet" href="conduit-ds.css" />
+</head>
+<body>
+  <div class="urlbar"><span class="lock">🔒</span> vault.conduit.app<b>/oauth/authorize</b><span style="margin-left:auto" class="note">OAuth 2.1 · PKCE</span></div>
+  <div class="center-stage">
+    <div class="consent stagger">
+      <div class="who">
+        <div class="a" style="color:var(--info)">C</div>
+        <span class="arrowflow">→</span>
+        <div class="a"><span style="width:11px;height:11px;border-radius:50%;background:var(--accent);box-shadow:0 0 12px var(--accent);display:block"></span></div>
+        <div style="margin-left:4px"><b>Claude Desktop</b><br><span class="note">wants to use Acme's tools via conduit</span></div>
+      </div>
+      <label class="note" style="display:block;margin-bottom:6px">ACTING AS END-USER</label>
+      <select class="as"><option>alice@acme.com</option><option>bob@acme.com</option><option>cara@acme.com</option></select>
+      <div class="grant">
+        <div class="note" style="margin-bottom:8px">GRANTING ACCESS TO</div>
+        <div class="gi"><span class="mono" style="color:var(--accent-dim)">github.*</span><span class="mut small">repositories, profile</span></div>
+        <div class="gi"><span class="mono" style="color:var(--accent-dim)">slack.post_message</span><span class="mut small">post messages</span></div>
+      </div>
+      <p class="small mut" style="margin:0 0 4px">Tools run with the connections <b style="color:var(--text)">alice</b> has authorized. Unconnected tools will prompt her to connect.</p>
+      <div class="actions">
+        <button class="btn ghost lg" onclick="toast('Denied — no token issued')">Deny</button>
+        <button class="btn primary lg" onclick="toast('Authorized ✓ — audience-bound token issued to Claude Desktop')">Authorize</button>
+      </div>
+    </div>
+  </div>
+  <div class="toast" id="toast"><span class="dot"></span><span id="toastmsg"></span></div>
+<script>let tt;function toast(m){const t=document.getElementById('toast');document.getElementById('toastmsg').textContent=m;t.classList.add('show');clearTimeout(tt);tt=setTimeout(()=>t.classList.remove('show'),2600);}</script>
+</body>
+</html>

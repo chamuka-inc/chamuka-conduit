@@ -1,0 +1,88 @@
+[
+  {
+    "name": "github.get_authenticated_user",
+    "provider": "github",
+    "description": "Get the profile of the authenticated user.",
+    "providerHosts": ["api.github.com"],
+    "inputSchema": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "type": "object",
+      "properties": {},
+      "additionalProperties": false
+    },
+    "outputSchema": {
+      "type": "object",
+      "properties": {
+        "login": { "type": "string" },
+        "id": { "type": "integer" },
+        "name": { "type": ["string", "null"] },
+        "htmlUrl": { "type": "string" }
+      }
+    },
+    "request": {
+      "method": "GET",
+      "urlTemplate": "https://api.github.com/user",
+      "headers": { "Accept": "application/vnd.github+json" }
+    },
+    "normalize": { "login": "login", "id": "id", "name": "name", "htmlUrl": "html_url" }
+  },
+  {
+    "name": "github.create_issue",
+    "provider": "github",
+    "description": "Create an issue in a repository.",
+    "providerHosts": ["api.github.com"],
+    "inputSchema": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "type": "object",
+      "properties": {
+        "owner": { "type": "string" },
+        "repo": { "type": "string" },
+        "title": { "type": "string" },
+        "body": { "type": "string" }
+      },
+      "required": ["owner", "repo", "title"],
+      "additionalProperties": false
+    },
+    "outputSchema": {
+      "type": "object",
+      "properties": {
+        "number": { "type": "integer" },
+        "htmlUrl": { "type": "string" },
+        "state": { "type": "string" }
+      }
+    },
+    "request": {
+      "method": "POST",
+      "urlTemplate": "https://api.github.com/repos/{owner}/{repo}/issues",
+      "headers": { "Accept": "application/vnd.github+json" },
+      "body": { "title": "{title}", "body": "{body}" }
+    },
+    "normalize": { "number": "number", "htmlUrl": "html_url", "state": "state" }
+  },
+  {
+    "name": "github.list_repositories",
+    "provider": "github",
+    "description": "List repositories for the authenticated user.",
+    "providerHosts": ["api.github.com"],
+    "inputSchema": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "type": "object",
+      "properties": {
+        "visibility": { "type": "string", "enum": ["all", "public", "private"] },
+        "perPage": { "type": "integer", "minimum": 1, "maximum": 100 }
+      },
+      "additionalProperties": false
+    },
+    "outputSchema": {
+      "type": "array",
+      "items": { "type": "object" }
+    },
+    "request": {
+      "method": "GET",
+      "urlTemplate": "https://api.github.com/user/repos",
+      "headers": { "Accept": "application/vnd.github+json" },
+      "query": { "visibility": "{visibility}", "per_page": "{perPage}" }
+    },
+    "normalize": {}
+  }
+]
