@@ -126,3 +126,13 @@ conduit needs a running credvault. Bring it up from the credvault repo (it ships
 `CONDUIT_CREDVAULT_URL`. conduit holds a credvault **tenant key** server-side and asks for
 tokens at execution time. No backward-compat constraints — pre-release; prefer clean,
 structurally-correct design.
+
+**The boundary is pinned to credvault's OpenAPI.** credvault's published spec
+(`docs/openapi.yaml`) is vendored verbatim as `packages/credvault-client/credvault.openapi.yaml`
+and is the source of truth for the one operation conduit calls (`GET /v1/credentials/{provider}`).
+An offline conformance test (`packages/credvault-client/test/openapi-conformance.test.ts`) asserts
+conduit's `CredvaultCredential` shape, error-code handling, and status mapping stay consistent with
+it — so drift fails `pnpm verify`, not production. Re-sync the snapshot after a credvault API change
+with `./scripts/sync-credvault-openapi.sh` (reads `../credvault/docs/openapi.yaml`), then run the
+tests to see what changed. The runtime contract still lives in the frozen `@conduit/contracts`
+(`CredvaultCredential`); the spec is its authority, the conformance test is the link.

@@ -16,6 +16,7 @@
     "zod": "^4.4"
   },
   "devDependencies": {
-    "@conduit/test-support": "workspace:*"
+    "@conduit/test-support": "workspace:*",
+    "yaml": "^2.6.1"
   }
 }
