@@ -1,6 +1,8 @@
-# conduit
+# Chamuka Conduit
 
 [![License: Apache-2.0](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](LICENSE)
+
+Declarative action layer for AI agents over REST and MCP.
 
 **conduit** is the action/integration layer for AI agents and applications. It turns
 third-party SaaS APIs into callable, schema-typed actions — discoverable as LLM
@@ -12,7 +14,7 @@ generic engine validates, resolves credentials, renders the request, executes it
 normalizes the response.
 
 conduit deliberately does **not** store credentials. It delegates token storage, refresh,
-and rotation to [**credvault**](https://github.com/chamuka-inc/credvault) — a separate
+and rotation to [**credvault**](https://github.com/chamuka-inc/chamuka-credvault), a separate
 credential-vault service — and asks it for a guaranteed-valid token at execution time. That
 HTTP boundary is the only coupling between the two and is pinned by contract.
 
@@ -49,7 +51,7 @@ Postgres + the GitHub API. Next steps are post-v1: broaden the catalog beyond Gi
 
 ## Development
 
-Requires Node ≥ 20 and pnpm. A running [credvault](https://github.com/chamuka-inc/credvault)
+Requires Node ≥ 20 and pnpm. A running [credvault](https://github.com/chamuka-inc/chamuka-credvault)
 is needed for the live test suites and to actually execute actions.
 
 ```sh
@@ -86,6 +88,18 @@ The gate resolves three env vars (`CONDUIT_CREDVAULT_URL`, `CONDUIT_TEST_DATABAS
 | [`PLAN.md`](PLAN.md) | Module decomposition, dependency DAG, acceptance criteria |
 | [`UX_DESIGN.md`](UX_DESIGN.md) | The four agent/operator surfaces (mockups in `design/`) |
 
+## Contributing
+
+See [CONTRIBUTING.md](CONTRIBUTING.md).
+
+## Security
+
+Report vulnerabilities to [security@chamuka.ai](mailto:security@chamuka.ai). See [SECURITY.md](SECURITY.md).
+
 ## License
 
-Apache-2.0 — see [`LICENSE`](LICENSE).
+Licensed under the Apache License, Version 2.0. See [LICENSE](LICENSE).
+
+---
+
+Part of [Chamuka Labs](https://chamuka.ai), an applied AI lab.
