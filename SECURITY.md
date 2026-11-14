@@ -24,8 +24,8 @@ Instead, report privately through one of:
    ["Report a vulnerability"](https://github.com/chamuka-inc/conduit/security/advisories/new)
    button on the repository's *Security* tab. This keeps the report private and lets us
    collaborate on a fix and a CVE in one place.
-2. **Email** — TODO: replace this placeholder with the public security contact Swift
-   chooses before a public release. Do not use a personal mailbox.
+2. **Email** — `security@chamuka.ai`.
+   Encrypt sensitive details if you can.
 
 Please include:
 

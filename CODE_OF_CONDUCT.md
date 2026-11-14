@@ -19,12 +19,7 @@ project.
 ## Enforcement
 
 Instances of abusive, harassing, or otherwise unacceptable behavior may be reported
-privately to the project maintainers.
-
-TODO: replace this placeholder with the public conduct contact Swift chooses before a
-public release. Do not use a personal mailbox. Until then, prefer a private GitHub
-Security Advisory or a maintainer-only channel.
-
+privately to the project maintainers at **security@chamuka.ai**.
 All complaints will be reviewed and investigated promptly and fairly. Maintainers are
 obligated to respect the privacy and security of the reporter of any incident.
 
