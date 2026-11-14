@@ -14,7 +14,7 @@ generic engine validates, resolves credentials, renders the request, executes it
 normalizes the response.
 
 conduit deliberately does **not** store credentials. It delegates token storage, refresh,
-and rotation to [**credvault**](https://github.com/chamuka-inc/chamuka-credvault), a separate
+and rotation to [**credvault**](https://github.com/chamuka-labs/chamuka-credvault), a separate
 credential-vault service — and asks it for a guaranteed-valid token at execution time. That
 HTTP boundary is the only coupling between the two and is pinned by contract.
 
@@ -51,7 +51,7 @@ Postgres + the GitHub API. Next steps are post-v1: broaden the catalog beyond Gi
 
 ## Development
 
-Requires Node ≥ 20 and pnpm. A running [credvault](https://github.com/chamuka-inc/chamuka-credvault)
+Requires Node ≥ 20 and pnpm. A running [credvault](https://github.com/chamuka-labs/chamuka-credvault)
 is needed for the live test suites and to actually execute actions.
 
 ```sh

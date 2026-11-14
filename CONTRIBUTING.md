@@ -6,7 +6,7 @@ up, what the project expects from a change, and how to get it merged.
 conduit is the action/integration layer for AI agents and applications. It turns
 third-party SaaS APIs into callable, schema-typed actions. It deliberately does **not**
 store credentials — token storage, refresh, and rotation are delegated to
-[credvault](https://github.com/chamuka-inc/credvault). Keep that boundary intact.
+[credvault](https://github.com/chamuka-labs/credvault). Keep that boundary intact.
 
 ## Code of Conduct
 
@@ -25,7 +25,7 @@ run all commands from the repo root. A running credvault instance is only requir
 the live test suites and to actually execute actions; `pnpm verify` stays offline.
 
 ```bash
-git clone https://github.com/chamuka-inc/conduit
+git clone https://github.com/chamuka-labs/conduit
 cd conduit
 
 pnpm install
