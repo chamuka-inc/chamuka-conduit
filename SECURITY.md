@@ -21,7 +21,7 @@ minor version of the current major line.
 Instead, report privately through one of:
 
 1. **GitHub Security Advisories** (preferred) — use the
-   ["Report a vulnerability"](https://github.com/chamuka-inc/conduit/security/advisories/new)
+   ["Report a vulnerability"](https://github.com/chamuka-labs/conduit/security/advisories/new)
    button on the repository's *Security* tab. This keeps the report private and lets us
    collaborate on a fix and a CVE in one place.
 2. **Email** — `security@chamuka.ai`.
@@ -57,7 +57,7 @@ Out of scope:
 - Vulnerabilities in third-party dependencies (report those upstream; we will pick up the
   fix on update). You are still welcome to flag them so we can bump.
 - Issues in credvault itself — report those to the
-  [credvault](https://github.com/chamuka-inc/credvault) security process.
+  [credvault](https://github.com/chamuka-labs/credvault) security process.
 - Denial of service from unbounded request volume against an unprotected instance —
   conduit is designed to sit behind your platform's own gateway and network policy.
 
